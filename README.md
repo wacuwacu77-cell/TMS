@@ -19,6 +19,34 @@ AI    →  resolve("image send")
 
 ---
 
+## Why I Built This
+
+I don't know how to code. At all.
+
+Everything I build is done through **vibe coding** — describing what I want in natural language and letting GitHub Copilot write the actual code. That means every single change I make costs tokens, and every interaction depends entirely on the AI understanding my intent.
+
+My first project started as one massive context file — thousands of lines in a single `.py`. When it grew too large, I split it into multiple files by role. That's when the real problem started.
+
+**After splitting:**
+- I had no idea where any piece of code lived
+- Every time I said *"fix the X feature"*, Copilot had to search through thousands of lines
+- Each command burned tokens just for the AI to *find* the relevant code before even touching it
+- Workflow slowed to a crawl
+
+I couldn't fix this the "normal" way because I don't write code — I describe what I need. So I had to think of a solution that worked *within* my vibe coding workflow.
+
+The idea I came up with:
+
+> What if every function had a tag, and I pre-mapped the natural language phrases I'd likely say to those tags?
+
+That way, when I say *"fix the image send part"*, the AI doesn't search — it **resolves** my words directly to the exact file and line. No wasted tokens. No blind searching.
+
+That's TMS. Built by someone who can't code, for anyone else who codes the same way.
+
+If you're a vibe coder who relies on AI assistants and hates watching tokens burn on file exploration — this was made for you.
+
+---
+
 ## The Problem It Solves
 
 | Without TMS | With TMS |
