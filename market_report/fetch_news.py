@@ -22,11 +22,33 @@ except ImportError:
 
 KST = timezone(timedelta(hours=9))
 
-# 후보 RSS(런타임 검증). 인베스팅닷컴은 403 이 잦아 후순위.
+# 후보 RSS(런타임 검증). 매체별로 여러 후보를 두어 첫 URL이 막히면 다음을 시도한다.
+# 인베스팅닷컴은 403 이 잦아 후순위.
 FEEDS = [
-    {"name": "연합뉴스", "url": "https://www.yna.co.kr/rss/economy.xml"},
-    {"name": "매일경제", "url": "https://www.mk.co.kr/rss/30100041/"},
-    {"name": "인베스팅닷컴", "url": "https://kr.investing.com/rss/news.rss"},
+    {
+        "name": "연합뉴스",
+        "urls": [
+            "https://www.yna.co.kr/rss/economy.xml",
+            "https://www.yna.co.kr/rss/news.xml",
+            "https://www.yna.co.kr/rss/all.xml",
+        ],
+    },
+    {
+        "name": "매일경제",
+        "urls": [
+            "https://www.mk.co.kr/rss/30100041/",  # 경제
+            "https://www.mk.co.kr/rss/40300001/",  # 증권
+            "https://www.mk.co.kr/rss/30000001/",  # 전체
+        ],
+    },
+    {
+        "name": "인베스팅닷컴",
+        "urls": [
+            "https://kr.investing.com/rss/news_25.rss",  # 경제
+            "https://kr.investing.com/rss/news.rss",
+            "https://www.investing.com/rss/news.rss",
+        ],
+    },
 ]
 
 # 시장영향도 키워드(가중치 부여용)
@@ -81,7 +103,12 @@ def fetch_news(max_candidates: int = 20) -> list:
     seen = set()
 
     for feed in FEEDS:
-        for entry in _parse_feed(feed["url"]):
+        entries = []
+        for url in feed["urls"]:
+            entries = _parse_feed(url)
+            if entries:
+                break  # 첫 성공 URL 사용
+        for entry in entries:
             title = (getattr(entry, "title", "") or "").strip()
             link = (getattr(entry, "link", "") or "").strip()
             if not title or not link:
