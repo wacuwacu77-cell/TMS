@@ -12,14 +12,16 @@
 
 WATCHLIST = {
     "원자재": [
-        {"ticker": "GC=F", "name": "금",       "unit": "$/oz",    "decimals": 2},
-        {"ticker": "SI=F", "name": "은",       "unit": "$/oz",    "decimals": 2},
-        {"ticker": "CL=F", "name": "WTI 원유",  "unit": "$/bbl",   "decimals": 2},
-        {"ticker": "BZ=F", "name": "브렌트유",  "unit": "$/bbl",   "decimals": 2},
-        {"ticker": "NG=F", "name": "천연가스",  "unit": "$/MMBtu", "decimals": 3},
-        {"ticker": "ZC=F", "name": "옥수수",    "unit": "¢/bu",    "decimals": 2},
-        {"ticker": "ZW=F", "name": "밀",        "unit": "¢/bu",    "decimals": 2},
-        {"ticker": "ZS=F", "name": "대두",      "unit": "¢/bu",    "decimals": 2},
+        {"ticker": "GC=F",  "name": "금",       "unit": "$/oz",    "decimals": 2},
+        {"ticker": "SI=F",  "name": "은",       "unit": "$/oz",    "decimals": 2},
+        {"ticker": "HG=F",  "name": "구리",     "unit": "$/lb",    "decimals": 3},
+        {"ticker": "CL=F",  "name": "WTI 원유", "unit": "$/bbl",   "decimals": 2},
+        {"ticker": "BZ=F",  "name": "브렌트유", "unit": "$/bbl",   "decimals": 2},
+        {"ticker": "NG=F",  "name": "천연가스", "unit": "$/MMBtu", "decimals": 3},
+        {"ticker": "TIO=F", "name": "철광석",   "unit": "$/t",     "decimals": 2},
+        {"ticker": "ZC=F",  "name": "옥수수",   "unit": "¢/bu",    "decimals": 2},
+        {"ticker": "ZW=F",  "name": "밀",       "unit": "¢/bu",    "decimals": 2},
+        {"ticker": "ZS=F",  "name": "대두",     "unit": "¢/bu",    "decimals": 2},
     ],
     "증시": [
         {"ticker": "^KS11", "name": "코스피",     "unit": "pt", "decimals": 2, "naver": "KOSPI"},
