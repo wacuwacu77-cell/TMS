@@ -125,7 +125,7 @@ def summarize(market: dict, news: list) -> dict:
 
 
 # ---------------------------------------------------------------- 렌더링
-def render(market: dict, summary: dict, now: datetime) -> str:
+def render(market: dict, summary: dict, now: datetime, movers: dict | None = None) -> str:
     # 데이터 기준일(가장 흔한 as_of)
     as_ofs = [r["as_of"] for rows in market["categories"].values() for r in rows if r.get("as_of")]
     data_date = max(as_ofs) if as_ofs else "N/A"
@@ -145,6 +145,12 @@ def render(market: dict, summary: dict, now: datetime) -> str:
         "> 변동: 일=전일 종가 / 월=1개월 전 / 연=1년 전 대비",
         "",
         fetch_market.to_markdown(market),
+    ]
+    if movers:
+        mv_md = _render_movers(movers)
+        if mv_md:
+            lines.append(mv_md)
+    lines += [
         "## 📰 오늘의 뉴스",
         "",
     ]
@@ -169,12 +175,32 @@ def render(market: dict, summary: dict, now: datetime) -> str:
     return "\n".join(lines)
 
 
+def _render_movers(movers: dict) -> str:
+    rises = movers.get("rises", [])
+    falls = movers.get("falls", [])
+    if not rises and not falls:
+        return ""
+    lines = ["### 📈 코스피 당일 등락 상위", ""]
+    if rises:
+        lines.append("**상승 Top 5**")
+        for s in rises:
+            lines.append(f"- {s['name']} `▲ {s['pct']:+.2f}%`")
+    if falls:
+        lines.append("")
+        lines.append("**하락 Top 5**")
+        for s in falls:
+            lines.append(f"- {s['name']} `▼ {s['pct']:+.2f}%`")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def main():
     now = datetime.now(KST)
     market = fetch_market.fetch_all()
+    movers = fetch_market.fetch_kospi_movers()
     news = fetch_news.fetch_news()
     summary = summarize(market, news)
-    content = render(market, summary, now)
+    content = render(market, summary, now, movers)
 
     os.makedirs(REPORTS_DIR, exist_ok=True)
     path = os.path.join(REPORTS_DIR, f"{now.strftime('%Y-%m-%d')}.md")

@@ -97,6 +97,66 @@ def _extract_close(data, ticker):
         return None
 
 
+def fetch_kospi_movers(top_n: int = 5) -> dict:
+    """네이버 증권에서 코스피 당일 상승/하락 상위 종목을 스크래핑."""
+    try:
+        import requests
+        from html.parser import HTMLParser
+
+        headers = {"User-Agent": "Mozilla/5.0"}
+
+        class TableParser(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.rows, self._row, self._td, self._depth = [], [], False, 0
+
+            def handle_starttag(self, tag, attrs):
+                if tag == "tr":
+                    self._row = []
+                elif tag == "td":
+                    self._td = True
+                    self._depth += 1
+
+            def handle_endtag(self, tag):
+                if tag == "tr" and self._row:
+                    self.rows.append(self._row[:])
+                    self._row = []
+                elif tag == "td":
+                    self._depth -= 1
+                    if self._depth == 0:
+                        self._td = False
+
+            def handle_data(self, data):
+                if self._td:
+                    self._row.append(data.strip())
+
+        def _scrape(url):
+            r = requests.get(url, headers=headers, timeout=15)
+            r.raise_for_status()
+            p = TableParser()
+            p.feed(r.text)
+            stocks = []
+            for row in p.rows:
+                cells = [c for c in row if c]
+                if len(cells) >= 3:
+                    name = cells[0]
+                    pct_str = next((c for c in cells[1:] if "%" in c or c.replace(".", "").replace("+", "").replace("-", "").isdigit()), None)
+                    if name and pct_str:
+                        try:
+                            pct = float(pct_str.replace("%", "").replace("+", "").replace(",", ""))
+                            stocks.append({"name": name, "pct": pct})
+                        except ValueError:
+                            pass
+            return stocks[:top_n]
+
+        rises = _scrape("https://finance.naver.com/sise/sise_rise.naver")
+        falls = _scrape("https://finance.naver.com/sise/sise_fall.naver")
+        return {"rises": rises, "falls": falls}
+    except Exception as exc:
+        print(f"[warn] 코스피 등락 스크래핑 실패: {exc}", file=sys.stderr)
+        return {"rises": [], "falls": []}
+
+
 def _naver_index(symbol: str):
     """yfinance 실패 시 KOSPI/KOSDAQ 일봉 폴백(네이버 공개 엔드포인트)."""
     try:
