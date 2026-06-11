@@ -24,13 +24,13 @@
 `.github/workflows/daily-report.yml` 이 매일 `00:00 UTC`(=09:00 KST)에 실행한다.
 러너는 인터넷이 열려 있어 별도 네트워크 정책 변경이 필요 없다.
 
-흐름: 의존성 설치 → `build_report.py`(시세+뉴스+해설) → `reports/`를 `main`에 커밋 → `send_telegram.py`.
+흐름: 의존성 설치 → `build_report.py`(시세+뉴스+해설) → `reports/`를 `master`에 커밋 → `send_telegram.py`.
 
 ### 사전 준비 (저장소 Secrets)
 - `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` — 텔레그램 발송용 (`TELEGRAM_SETUP.md` 참고)
 - `ANTHROPIC_API_KEY` — (선택) 시장 해설·뉴스 선별을 Claude로 보강. 없으면 규칙 기반 폴백.
 
-> cron 스케줄은 워크플로가 **기본 브랜치(main)** 에 있어야 동작한다. 본 기능 머지 후 활성화된다.
+> cron 스케줄은 워크플로가 **기본 브랜치(master)** 에 있어야 동작한다. 본 기능 머지 후 활성화된다.
 
 ## 로컬 실행 / 검증
 ```bash

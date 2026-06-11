@@ -53,7 +53,8 @@ def _summarize_md(md_path: str) -> str:
             news_titles.append(ln.strip().lstrip("0123456789. ").replace("**", ""))
 
     repo = os.environ.get("GITHUB_REPOSITORY", "")
-    link = f"https://github.com/{repo}/blob/main/reports/{date}.md" if repo else f"reports/{date}.md"
+    branch = os.environ.get("GITHUB_REF_NAME", "master")
+    link = f"https://github.com/{repo}/blob/{branch}/reports/{date}.md" if repo else f"reports/{date}.md"
 
     out = [f"📊 데일리 시장 보고서 — {date}", ""]
     if overview:

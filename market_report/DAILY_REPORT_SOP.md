@@ -16,7 +16,7 @@
 4. 후보에서 시장영향도 순 **Top 5~7** 선별 + 한 줄 요약 작성
 5. `report_template.md` 포맷으로 `reports/YYYY-MM-DD.md` 작성(수치 표 + 뉴스 + 시장 해설)
    - 직접 작성 대신 `python market_report/build_report.py` 를 써도 됨(이 경우 4~5 자동)
-6. `git add reports/ && git commit && git push` (보고서는 `main` 의 `reports/` 에 누적)
+6. `git add reports/ && git commit && git push` (보고서는 `master` 의 `reports/` 에 누적)
 7. `python market_report/send_telegram.py reports/YYYY-MM-DD.md` 로 요약 발송
 
 ## 주의
